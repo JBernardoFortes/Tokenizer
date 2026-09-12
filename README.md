@@ -2,8 +2,23 @@
 
 Implementação das 5 etapas do exercício "Tópicos em IA / PLN: Criação de
 LLMs do Zero — Atividade Prática 1" (`ativ04_tokenizador.pdf`), usando como
-dataset a amostra da BDTD em
-`/home/bernardo/Documents/dev/pipeline-BDTD/data/processed/text/`.
+dataset a amostra da BDTD (textos `.txt` em `data/processed/text` do pipeline).
+
+## Configuração de diretórios
+
+Todos os caminhos são relativos à raiz do projeto e configuráveis via `.env`
+(copie de `.env.example`):
+
+```
+DATASET_DIR=../pipeline-BDTD/data/processed/text   # onde estão os .txt do dataset
+OUTPUT_DIR=data                                     # onde sai corpus.txt e artefatos
+```
+
+- `DATASET_DIR` aponta para o diretório com os documentos `.txt`.
+- `OUTPUT_DIR` recebe os artefatos gerados (`corpus.txt`).
+- Sem `.env`, os padrões são `data/documents` (entrada) e `data` (saída).
+
+Para trocar o dataset, basta apontar `DATASET_DIR` para outra pasta com `.txt`.
 
 ## Setup
 

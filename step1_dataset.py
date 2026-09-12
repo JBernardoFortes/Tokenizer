@@ -11,10 +11,9 @@ from __future__ import annotations
 import pathlib
 import statistics
 
+import config
+
 DELIMITER = "<|endoftext|>"
-TEXT_DIR = pathlib.Path("/home/bernardo/Documents/dev/pipeline-BDTD/data/processed/text")
-OUT_PATH = pathlib.Path("data/corpus.txt")
-BLANK_LINE = ""
 
 
 def load_documents(text_dir: pathlib.Path) -> list[str]:
@@ -40,7 +39,8 @@ def build_corpus(documents: list[str], delimiter: str) -> str:
 
 
 def main() -> None:
-    documents = load_documents(TEXT_DIR)
+    text_dir = config.DATASET_DIR
+    documents = load_documents(text_dir)
     n_docs = len(documents)
     paragraphs_per_doc = [len(split_paragraphs(d)) for d in documents]
     words_per_doc = [count_words(d) for d in documents]
@@ -48,7 +48,7 @@ def main() -> None:
     print("=" * 60)
     print("STEP 1 - ANALISE DO DATASET BDTD (amostra)")
     print("=" * 60)
-    print(f"Diretorio: {TEXT_DIR}")
+    print(config.describe())
     print(f"Numero de documentos: {n_docs}")
     print(
         f"Numero medio de paragrafos por documento: "
@@ -69,13 +69,14 @@ def main() -> None:
     print(f"  Titulo/arquivo: {first[:120]!r}")
     print(f"  Paragrafos: {len(first_paras)} | Palavras: {words_per_doc[0]}")
 
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_PATH = config.CORPUS_PATH
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     corpus = build_corpus(documents, DELIMITER)
-    OUT_PATH.write_text(corpus, encoding="utf-8")
-    size_mb = OUT_PATH.stat().st_size / 1_048_576
+    OUTPUT_PATH.write_text(corpus, encoding="utf-8")
+    size_mb = OUTPUT_PATH.stat().st_size / 1_048_576
     n_sep = corpus.count(DELIMITER)
     print()
-    print(f"Arquivo txt gerado: {OUT_PATH} ({size_mb:.2f} MB)")
+    print(f"Arquivo txt gerado: {OUTPUT_PATH} ({size_mb:.2f} MB)")
     print(f"Separadores {DELIMITER!r} usados: {n_sep}")
     print(f"Ultimos 50 caracteres: {corpus[-50:]!r}")
 

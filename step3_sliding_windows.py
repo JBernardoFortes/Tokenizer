@@ -13,16 +13,17 @@ from torch.utils.data import DataLoader as TorchDataLoader
 
 import tiktoken
 
+import config
 from dataset import BdtdDataLoader, BdtdDataset, describe_batch
 
-CORPUS_PATH = "data/corpus.txt"
+CORPUS_PATH = config.CORPUS_PATH
 ENCODING_NAME = "gpt2"
 
 
 def tokenize_sample(
-    enc: tiktoken.Encoding, path: str, sample_tokens: int | None
+    enc: tiktoken.Encoding, sample_tokens: int | None
 ) -> list[int]:
-    text = open(path, encoding="utf-8").read()
+    text = CORPUS_PATH.read_text(encoding="utf-8")
     allowed = {enc.decode([enc.eot_token])}
     tokens = enc.encode(text, allowed_special=allowed)
     if sample_tokens is not None:
@@ -60,7 +61,7 @@ def main() -> None:
     print(f"max_length={args.max_length}, stride={args.stride}, batch_size={args.batch_size}")
 
     enc = tiktoken.get_encoding(ENCODING_NAME)
-    tokens = tokenize_sample(enc, CORPUS_PATH, args.sample_tokens)
+    tokens = tokenize_sample(enc, args.sample_tokens)
     print(f"Total de tokens do corpus (amostra): {len(tokens)}")
 
     dataset = BdtdDataset(tokens, max_length=args.max_length, stride=args.stride)
